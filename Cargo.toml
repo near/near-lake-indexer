@@ -1,0 +1,26 @@
+[package]
+name = "near-lake"
+version = "0.1.0"
+authors = ["Near Inc <hello@nearprotocol.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix = "=0.11.0-beta.2"
+aws-config = "0.6.0"
+aws-endpoint = "0.6.0"
+aws-sdk-s3 = "0.6.0"
+aws-smithy-http = "0.36.0"
+clap = { version = "3.0.0-beta.5", features = ["color", "derive", "env"] }
+futures = "0.3.5"
+itertools = "0.9.0"
+openssl-probe = { version = "0.1.2" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1.0.55"
+tokio = { version = "1.1", features = ["sync", "time"] }
+tokio-stream = { version = "0.1" }
+tracing = "0.1.13"
+tracing-subscriber = "0.2.4"
+
+near-indexer = { git = "https://github.com/near/nearcore", rev = "6c5199f3b8b72ea8065e25cdd0bd3661ef95f878" }
