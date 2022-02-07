@@ -138,7 +138,7 @@ It's not necessary but in order to index everything in the network it is better 
 for [5 last epochs](https://docs.near.org/docs/concepts/epoch). In order to index data from the genesis 
 we need to turn the node in archival mode.
 
-To do it we need to update `config.json` located in `--home-dir` or your choice (by default it is `~/.near`).
+To do it we need to update `config.json` located in `--home-dir` (by default it is `~/.near`).
 
 Find next keys in the config and update them as following:
 
