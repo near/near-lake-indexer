@@ -76,9 +76,10 @@ While this issue is open https://github.com/nearprotocol/nearcore/issues/3156 yo
 - [betanet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/betanet/config.json)
 - [mainnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json)
 
-Configs for the specified network are in the `--home-dir` provided folder. We need to ensure that NEAR Lake follows
+Configs for the specified network are in the `--home` provided folder. We need to ensure that NEAR Lake follows
 all the necessary shards, so `"tracked_shards"` parameters in `~/.near/testnet/config.json` needs to be configured properly.
-For example, with a single shared network, you just add the shard #0 to the list:
+Currently, `nearcore` treats empty value for `"tracked_shards"` as "do not track any shard" and **any value** as "track all shards".
+For example, in order to track all shards, you just add the shard #0 to the list:
 
 ```
 ...
