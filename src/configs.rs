@@ -14,7 +14,7 @@ use clap::Parser;
 pub(crate) struct Opts {
     /// Sets a custom config dir. Defaults to ~/.near/
     #[clap(short, long)]
-    pub home_dir: Option<std::path::PathBuf>,
+    pub home: Option<std::path::PathBuf>,
     #[clap(subcommand)]
     pub subcmd: SubCommand,
 }
