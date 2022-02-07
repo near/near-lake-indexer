@@ -123,7 +123,7 @@ with the network. This process can take a while, so we suggest to download a fre
 the `data` folder and put it in you `--home-dir` of your choice (by default it is `~/.near`)
 
 Running your NEAR Lake node on top of a backup data will reduce the time of syncing process 
-because your node will download only missing data and it will take reasonable time.
+because your node will download only the data after the backup was cut and it takes reasonable amount time.
 
 All the backups can be downloaded from the public S3 bucket which contains latest daily snapshots:
 
