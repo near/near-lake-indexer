@@ -65,7 +65,7 @@ $ cargo build --release
 To connect NEAR Lake to the specific chain you need to have necessary configs, you can generate it as follows:
 
 ```bash
-$ ./target/release/near-lake --home-dir ~/.near/testnet init --chain-id testnet --download-config --download-genesis
+$ ./target/release/near-lake --home ~/.near/testnet init --chain-id testnet --download-config --download-genesis
 ```
 
 The above code will download the official genesis config and generate necessary configs. You can replace `testnet` in the command above to different network ID (`betanet`, `mainnet`).
@@ -91,8 +91,8 @@ For example, with a single shared network, you just add the shard #0 to the list
 Commands to run NEAR Lake
 
 | binary 	| Command 	| Key/Subcommand               	| Required/Default                                                 	| Responsible for                                                                                                                                                                                                                                                                                                                                                         	|
-|--------	|---------	|------------------------------	|------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-|        	|         	| `--home-dir`                 	| Default <br>`~/.near`                                            	| Tells the node where too look for necessary files: <br>`config.json`<br>, <br>`genesis.json`<br>, <br>`node_key.json`<br>, and <br>`data`<br> folder                                                                                                                                                                                                                    	|
+|--------	|---------	|--------------------------	|------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+|        	|         	| `--home`                 	| Default <br>`~/.near`                                            	| Tells the node where too look for necessary files: <br>`config.json`<br>, <br>`genesis.json`<br>, <br>`node_key.json`<br>, and <br>`data`<br> folder                                                                                                                                                                                                                    	|
 |        	| `init`  	|                              	|                                                                  	| Tells the node to generate config files in `--home-dir`                                                                                                                                                                                                                                                                                                                 	|
 |        	|         	| `--chain-id`                 	| Required<br><br>  * `localnet`<br>  * `testnet`<br>  * `mainnet` 	| Defines the chain to generate config files for                                                                                                                                                                                                                                                                                                                          	|
 |        	|         	| `--download-config`          	| Optional                                                         	| If provided tells the node to download `config.json` from the public URL. You can download them manually<br><br> - [testnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json)<br> - [mainnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json)      	|
@@ -108,7 +108,7 @@ Commands to run NEAR Lake
 |        	|         	| `sync-from-block --height N` 	| One of the <br>`sync-`<br> subcommands is required               	| Tells the node to start indexing from the specified block height `N` (**Ensure** you node data has the block you want to start from)                                                                                                                                                                                                                                    	|
 
 ```bash
-$ ./target/release/near-lake --home-dir ~/.near/testnet run --stream-while-syncing --concurrency 50 sync-from-latest
+$ ./target/release/near-lake --home ~/.near/testnet run --stream-while-syncing --concurrency 50 sync-from-latest
 ```
 
 After the network is synced, you should see logs of every block height currently received by NEAR Lake.
@@ -152,8 +152,9 @@ Find next keys in the config and update them as following:
 ```
 
 The syncing process in archival mode can take a lot of time, so it's better to download a backup provided by NEAR 
-and put it in your `data` folder. After that your node will need to sync only missing data and it should take 
-reasonable time.
+and put it in your `data` folder. After that your node will download only the data after the backup was cut and it 
+takes reasonable amount time.
+
 
 All the backups can be downloaded from the public S3 bucket which contains the latest daily snapshots:
 
