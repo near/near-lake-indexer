@@ -17,7 +17,7 @@ fn main() {
 
     let opts: Opts = Opts::parse();
 
-    let home_dir = opts.home_dir.unwrap_or_else(near_indexer::get_default_home);
+    let home_dir = opts.home.unwrap_or_else(near_indexer::get_default_home);
 
     match opts.subcmd {
         SubCommand::Run(args) => {
@@ -30,7 +30,8 @@ fn main() {
             let system = actix::System::new();
             system.block_on(async move {
                 let indexer_config = args.clone().to_indexer_config(home_dir);
-                let indexer = near_indexer::Indexer::new(indexer_config);
+                let indexer = near_indexer::Indexer::new(indexer_config)
+                    .expect("Failed to initialize the Indexer");
 
                 // Regular indexer process starts here
                 let stream = indexer.streamer();
@@ -64,7 +65,7 @@ fn main() {
 }
 
 async fn listen_blocks(
-    stream: tokio::sync::mpsc::Receiver<near_indexer::StreamerMessage>,
+    stream: tokio::sync::mpsc::Receiver<near_indexer_primitives::StreamerMessage>,
     bucket: String,
     region: String,
     concurrency: std::num::NonZeroU16,
@@ -91,7 +92,7 @@ async fn listen_blocks(
 
 async fn handle_message(
     client: &Client,
-    streamer_message: near_indexer::StreamerMessage,
+    streamer_message: near_indexer_primitives::StreamerMessage,
     bucket: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let base_key = streamer_message.block.header.height.to_string();
@@ -99,20 +100,25 @@ async fn handle_message(
     // Block
     let block_json = serde_json::to_value(streamer_message.block)
         .expect("Failed to serializer BlockView to JSON");
-    tokio::spawn(put_object_or_retry(client.clone(), bucket.clone(), block_json, format!("{}/block.json", base_key).to_string()));
+    tokio::spawn(put_object_or_retry(
+        client.clone(),
+        bucket.clone(),
+        block_json,
+        format!("{}/block.json", base_key).to_string(),
+    ));
 
     // Shards
     for shard in streamer_message.shards.iter() {
         let key = format!("{}/shard_{}.json", base_key, shard.shard_id);
-        let shard_json = serde_json::to_value(shard)
-            .expect("Failed to serialize IndexerShard to JSON");
-        tokio::spawn(put_object_or_retry(client.clone(), bucket.clone(), shard_json, key));
+        let shard_json =
+            serde_json::to_value(shard).expect("Failed to serialize IndexerShard to JSON");
+        tokio::spawn(put_object_or_retry(
+            client.clone(),
+            bucket.clone(),
+            shard_json,
+            key,
+        ));
     }
-
-    // State changes
-    let state_changes_json = serde_json::to_value(streamer_message.state_changes)
-        .expect("Failed to serialize StateChanges to JSON");
-    tokio::spawn(put_object_or_retry(client.clone(), bucket.clone(), state_changes_json, format!("{}/state_changes.json", base_key).to_string()));
 
     Ok(())
 }
@@ -134,14 +140,20 @@ async fn put_object_or_retry(
                 // missing credentials error
                 match err {
                     aws_smithy_http::result::SdkError::ConstructionFailure(box_error) => {
-                        if box_error.to_string() == String::from("No credentials in the property bag") {
+                        if box_error.to_string()
+                            == String::from("No credentials in the property bag")
+                        {
                             tracing::error!(target: INDEXER, "No credentials in the property bag");
                             std::process::abort();
                         }
-                    },
+                    }
                     _ => {}
                 };
-                tracing::warn!(target: INDEXER, "Failed to put {} to S3, retrying", &filename);
+                tracing::warn!(
+                    target: INDEXER,
+                    "Failed to put {} to S3, retrying",
+                    &filename
+                );
             }
         }
     }
@@ -154,7 +166,6 @@ async fn put_object(
     body: ByteStream,
     filename: &str,
 ) -> Result<(), aws_smithy_http::result::SdkError<aws_sdk_s3::error::PutObjectError>> {
-
     client
         .put_object()
         .bucket(bucket)
