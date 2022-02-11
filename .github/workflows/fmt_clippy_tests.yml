@@ -10,15 +10,20 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
 
-    runs-on: ubuntu-latest
-
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2
-    - name: Fmt check
-      run: cargo fmt --all --check
-    - name: Clippy check
-      run: cargo clippy
-    - name: Run tests
-      run: cargo test --verbose
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+        components: rustfmt
+    - name: Check formatting
+      run: |
+        cargo fmt -- --check
