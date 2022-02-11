@@ -105,19 +105,15 @@ async fn handle_message(
         bucket.clone(),
         block_json,
         format!("{}/block.json", base_key).to_string(),
-    ).await;
+    )
+    .await;
 
     // Shards
     for shard in streamer_message.shards.iter() {
         let key = format!("{}/shard_{}.json", base_key, shard.shard_id);
         let shard_json =
             serde_json::to_value(shard).expect("Failed to serialize IndexerShard to JSON");
-        put_object_or_retry(
-            client.clone(),
-            bucket.clone(),
-            shard_json,
-            key,
-        ).await;
+        put_object_or_retry(client.clone(), bucket.clone(), shard_json, key).await;
     }
 
     Ok(())
