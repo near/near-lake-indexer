@@ -106,7 +106,7 @@ jobs:
     - name: Build archive
       shell: bash
       run: |
-        staging="near-cli-${{ needs.create-release.outputs.near_cli_version }}-${{ matrix.target }}"
+        staging="near-cli-${{ needs.create-release.outputs.near_lake_version }}-${{ matrix.target }}"
         mkdir -p "$staging"/"docs"
 
         cp README.md "$staging/"
