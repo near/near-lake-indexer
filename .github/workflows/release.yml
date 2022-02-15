@@ -101,19 +101,10 @@ jobs:
       run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }} ${{ env.FEATURES_FLAGS }}
 
     - name: Strip release binary (linux and macos)
-      run: strip "${{ env.TARGET_DIR }}/release/near-lake"
-
-    - name: Build archive
-      shell: bash
       run: |
-        staging="near-lake-${{ needs.create-release.outputs.near_lake_version }}-${{ matrix.target }}"
-        mkdir -p "$staging"/"docs"
-
-        cp README.md "$staging/"
-
-        cp "${{ env.TARGET_DIR }}/release/near-lake" "$staging/"
-        tar czf "$staging.tar.gz" "$staging"
-        echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
+        strip "${{ env.TARGET_DIR }}/release/near-lake"
+        cp "${{ env.TARGET_DIR }}/release/near-lake" near-lake
+        echo "ASSET=near-lake" >> $GITHUB_ENV
 
     - name: Upload release archive
       uses: actions/upload-release-asset@v1.0.1
