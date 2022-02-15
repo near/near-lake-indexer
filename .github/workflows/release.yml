@@ -110,7 +110,6 @@ jobs:
         mkdir -p "$staging"/"docs"
 
         cp README.md "$staging/"
-        cp -a "docs"/* "$staging/docs/"
 
         cp "${{ env.TARGET_DIR }}/release/near-lake" "$staging/"
         tar czf "$staging.tar.gz" "$staging"
