@@ -2695,7 +2695,7 @@ dependencies = [
 
 [[package]]
 name = "near-lake"
-version = "0.1.0"
+version = "0.1.0-rc.0"
 dependencies = [
  "actix",
  "aws-config",
