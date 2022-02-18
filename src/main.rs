@@ -95,7 +95,7 @@ async fn handle_message(
     streamer_message: near_indexer_primitives::StreamerMessage,
     bucket: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let base_key = streamer_message.block.header.height.to_string();
+    let base_key = format!("{:0>12}", streamer_message.block.header.height);
 
     // Block
     let block_json = serde_json::to_value(streamer_message.block)
