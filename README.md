@@ -163,3 +163,33 @@ All the backups can be downloaded from the public S3 bucket which contains the l
 * [Archival Testnet data folder](https://near-protocol-public.s3-accelerate.amazonaws.com/backups/testnet/archive/data.tar)
 
 See https://docs.near.org/docs/roles/integrator/exchange-integration#running-an-archival-node for reference
+
+## Using the data
+
+We write all the data to AWS S3 buckets:
+
+- `near-lake-data-testnet` (`eu-central-1` region) for testnet
+- `near-lake-data-mainnet` (`eu-central-1` region) for mainnet
+
+### Data structure
+
+The data structure we use is the following:
+
+```
+<block_height>/
+  block.json
+  shard_0.json
+  shard_1.json
+  ...
+  shard_N.json
+```
+
+- `<block_height>` is a 12-character-long `u64` string with leading zeros (e.g `000042839521`). [See this issue for a reasoning](https://github.com/near/near-lake/issues/23)
+- `block_json` contains JSON-serialized [`BlockView`](https://github.com/near/nearcore/blob/e9a28c46c2bea505b817abf484e6015a61ea7d01/core/primitives/src/views.rs#L711-L716) struct. **NB!** this struct might change in the future, we will announce it
+- `shard_N.json` where `N` is `u64` starting from `0`. Represents the index number of the shard. In order to find out the expected number of shards in the block you can look in `block.json` at `.header.chunks_included`
+
+### NEAR Lake Framework
+
+Once we [set up the public access to the buckets](https://github.com/near/near-lake/issues/22) anyone will be able to build their own code to read it through.
+
+For our own needs we are working on [NEAR Lake Framework](https://github.com/near/near-lake-framework) to have a simple way to create an indexer on top of the data stored by NEAR Lake itself.
