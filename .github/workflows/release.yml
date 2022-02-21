@@ -2,8 +2,8 @@ name: release
 on:
   push:
     # Enable when testing release infrastructure on a branch.
-    # branches:
-    # - ci/release-check
+    branches:
+    - ci/release-check
     tags:
     - "[0-9]+.[0-9]+.[0-9]+"
     - "[0-9]+.[0-9]+.[0-9]+-*"
@@ -11,9 +11,9 @@ jobs:
   create-release:
     name: create-release
     runs-on: ubuntu-latest
-    # env:
+    env:
       # Set to force version number, e.g., when no tag exists.
-      # NEAR_LAKE_VERSION: TEST-0.0.0
+      NEAR_LAKE_VERSION: TEST-0.0.0
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       near_lake_version: ${{ env.NEAR_LAKE_VERSION }}
