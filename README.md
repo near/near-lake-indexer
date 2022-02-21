@@ -163,3 +163,14 @@ All the backups can be downloaded from the public S3 bucket which contains the l
 * [Archival Testnet data folder](https://near-protocol-public.s3-accelerate.amazonaws.com/backups/testnet/archive/data.tar)
 
 See https://docs.near.org/docs/roles/integrator/exchange-integration#running-an-archival-node for reference
+
+## Using the data
+
+We write all the data to AWS S3 buckets:
+
+- `near-lake-data-testnet` (`eu-central-1` region) for testnet
+- `near-lake-data-mainnet` (`eu-central-1` region) for mainnet
+
+Once we [set up the public access to the buckets](https://github.com/near/near-lake/issues/22) anyone will be able to build their own code to read it through.
+
+For our own needs we are working on [NEAR Lake Framework](https://github.com/near/near-lake-framework) to have a simple way to create an indexer on top of the data stored by NEAR Lake itself.
