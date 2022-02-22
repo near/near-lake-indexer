@@ -45,14 +45,7 @@ Before you proceed, make sure you have the following software installed:
   > [default]
   > aws_access_key_id=AKIAIOSFODNN7EXAMPLE
   > aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-  > ```  
-  >  
-  > ~/.aws/config
   > ```
-  > [default]
-  > region=us-west-2
-  > output=json
-  > ```  
 
 ### Compile NEAR Lake
 
@@ -187,6 +180,10 @@ The data structure we use is the following:
 - `<block_height>` is a 12-character-long `u64` string with leading zeros (e.g `000042839521`). [See this issue for a reasoning](https://github.com/near/near-lake/issues/23)
 - `block_json` contains JSON-serialized [`BlockView`](https://github.com/near/nearcore/blob/e9a28c46c2bea505b817abf484e6015a61ea7d01/core/primitives/src/views.rs#L711-L716) struct. **NB!** this struct might change in the future, we will announce it
 - `shard_N.json` where `N` is `u64` starting from `0`. Represents the index number of the shard. In order to find out the expected number of shards in the block you can look in `block.json` at `.header.chunks_included`
+
+### Access the data
+
+All NEAR Lake AWS S3 buckets have [Request Payer](https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html) enabled. It means that anyone with their own AWS credentials can List and Read the bucket's content and **be charged for it by AWS**. Connections to the bucket have to be done with AWS credentials provided. See [NEAR Lake Framework](https://github.com/near/near-lake-framework) for a reference.
 
 ### NEAR Lake Framework
 
