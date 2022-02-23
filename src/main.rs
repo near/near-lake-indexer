@@ -15,16 +15,16 @@ const INDEXER: &str = "near_lake";
 
 #[derive(Debug, Clone)]
 struct Stats {
-    pub processing: std::collections::BTreeSet<u64>,
-    pub done_count: u64,
+    pub blocks_processing: std::collections::BTreeSet<u64>,
+    pub blocks_processed_count: u64,
     pub last_processed_block_height: u64,
 }
 
 impl Stats {
     pub fn new() -> Self {
         Self {
-            processing: std::collections::BTreeSet::new(),
-            done_count: 0,
+            blocks_processing: std::collections::BTreeSet::new(),
+            blocks_processed_count: 0,
             last_processed_block_height: 0,
         }
     }
@@ -111,14 +111,14 @@ async fn lake_logger(
         drop(stats_lock);
 
         let block_processing_speed: f64 =
-            (stats_copy.done_count as f64 - prev_done_count as f64) / interval_secs as f64;
+            ((stats_copy.blocks_processed_count - prev_done_count) as f64) / (interval_secs as f64);
 
-        let time_to_catch_the_tip =
+        let time_to_catch_the_tip_duration =
             if let Ok(block_height) = utils::fetch_latest_block(&view_client).await {
-                Some(
-                    (block_height - stats_copy.last_processed_block_height) as f64
-                        / block_processing_speed,
-                )
+                Some(std::time::Duration::from_millis(
+                    (block_height - stats_copy.last_processed_block_height)
+                        / ((block_processing_speed * 1_000f64) as u64),
+                ))
             } else {
                 None
             };
@@ -127,16 +127,19 @@ async fn lake_logger(
             target: INDEXER,
             "# {} | Blocks processing: {}| Blocks done: {}. Bps {:.2} b/s {}",
             stats_copy.last_processed_block_height,
-            stats_copy.processing.len(),
-            stats_copy.done_count,
+            stats_copy.blocks_processing.len(),
+            stats_copy.blocks_processed_count,
             block_processing_speed,
-            if let Some(seconds_to_catch_up) = time_to_catch_the_tip {
-                format!(" | {:.2} s to catch up the tip", seconds_to_catch_up)
+            if let Some(duration) = time_to_catch_the_tip_duration {
+                format!(
+                    " | {} to catch up the tip",
+                    humantime::format_duration(duration)
+                )
             } else {
                 "".to_string()
             }
         );
-        prev_done_count = stats_copy.done_count;
+        prev_done_count = stats_copy.blocks_processed_count;
     }
 }
 
@@ -175,7 +178,7 @@ async fn handle_message(
 ) -> anyhow::Result<()> {
     let block_height = streamer_message.block.header.height;
     let mut stats_lock = stats.lock().await;
-    stats_lock.processing.insert(block_height);
+    stats_lock.blocks_processing.insert(block_height);
     drop(stats_lock);
 
     let base_key = format!("{:0>12}", streamer_message.block.header.height);
@@ -199,8 +202,8 @@ async fn handle_message(
         put_object_or_retry(client.clone(), bucket.clone(), shard_json, key).await;
     }
     let mut stats_lock = stats.lock().await;
-    stats_lock.processing.remove(&block_height);
-    stats_lock.done_count += 1;
+    stats_lock.blocks_processing.remove(&block_height);
+    stats_lock.blocks_processed_count += 1;
     stats_lock.last_processed_block_height = block_height;
     drop(stats_lock);
     Ok(())

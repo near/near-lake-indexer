@@ -1909,6 +1909,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6456b8a6c8f33fee7d958fcd1b60d55b11940a79e63ae87013e6d22e26034440"
 
 [[package]]
+name = "humantime"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4"
+
+[[package]]
 name = "hyper"
 version = "0.14.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2185,7 +2191,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4da24a77a3d8a6d4862d95f72e6fdb9c09a643ecdb402d754004a557f2bec75"
 dependencies = [
  "scopeguard",
- "serde",
 ]
 
 [[package]]
@@ -2195,6 +2200,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712a4d093c9976e24e7dbca41db895dabcbac38eb5f4045393d17a95bdfb1109"
 dependencies = [
  "scopeguard",
+ "serde",
 ]
 
 [[package]]
@@ -2708,7 +2714,7 @@ dependencies = [
 
 [[package]]
 name = "near-lake"
-version = "0.1.0-rc.0"
+version = "0.2.0-rc.1"
 dependencies = [
  "actix",
  "anyhow",
@@ -2718,6 +2724,7 @@ dependencies = [
  "aws-smithy-http",
  "clap",
  "futures",
+ "humantime",
  "itertools",
  "near-client",
  "near-indexer",
@@ -3317,7 +3324,7 @@ dependencies = [
  "paperclip-actix",
  "paperclip-core",
  "paperclip-macros",
- "parking_lot 0.10.2",
+ "parking_lot 0.11.2",
  "semver 0.9.0",
  "serde",
  "serde_derive",
@@ -3338,7 +3345,7 @@ dependencies = [
  "once_cell",
  "paperclip-core",
  "paperclip-macros",
- "parking_lot 0.10.2",
+ "parking_lot 0.11.2",
  "serde_json",
 ]
 
@@ -3351,7 +3358,7 @@ dependencies = [
  "mime",
  "once_cell",
  "paperclip-macros",
- "parking_lot 0.10.2",
+ "parking_lot 0.11.2",
  "pin-project",
  "regex",
  "serde",

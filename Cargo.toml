@@ -15,6 +15,7 @@ aws-sdk-s3 = "0.6.0"
 aws-smithy-http = "0.36.0"
 clap = { version = "3.0.0-beta.5", features = ["color", "derive", "env"] }
 futures = "0.3.5"
+humantime = "2.1.0"
 itertools = "^0.10.3"
 openssl-probe = { version = "0.1.2" }
 serde = { version = "1", features = ["derive"] }
