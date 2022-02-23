@@ -15,7 +15,7 @@ const INDEXER: &str = "near_lake";
 
 #[derive(Debug, Clone)]
 struct Stats {
-    pub blocks_processing: std::collections::BTreeSet<u64>,
+    pub block_heights_processing: std::collections::BTreeSet<u64>,
     pub blocks_processed_count: u64,
     pub last_processed_block_height: u64,
 }
@@ -23,7 +23,7 @@ struct Stats {
 impl Stats {
     pub fn new() -> Self {
         Self {
-            blocks_processing: std::collections::BTreeSet::new(),
+            block_heights_processing: std::collections::BTreeSet::new(),
             blocks_processed_count: 0,
             last_processed_block_height: 0,
         }
@@ -102,7 +102,7 @@ async fn lake_logger(
     view_client: actix::Addr<near_client::ViewClientActor>,
 ) {
     let interval_secs = 10;
-    let mut prev_done_count: u64 = 0;
+    let mut prev_blocks_processed_count: u64 = 0;
 
     loop {
         tokio::time::sleep(std::time::Duration::from_secs(interval_secs)).await;
@@ -110,8 +110,9 @@ async fn lake_logger(
         let stats_copy = stats_lock.clone();
         drop(stats_lock);
 
-        let block_processing_speed: f64 =
-            ((stats_copy.blocks_processed_count - prev_done_count) as f64) / (interval_secs as f64);
+        let block_processing_speed: f64 = ((stats_copy.blocks_processed_count
+            - prev_blocks_processed_count) as f64)
+            / (interval_secs as f64);
 
         let time_to_catch_the_tip_duration =
             if let Ok(block_height) = utils::fetch_latest_block(&view_client).await {
@@ -127,7 +128,7 @@ async fn lake_logger(
             target: INDEXER,
             "# {} | Blocks processing: {}| Blocks done: {}. Bps {:.2} b/s {}",
             stats_copy.last_processed_block_height,
-            stats_copy.blocks_processing.len(),
+            stats_copy.block_heights_processing.len(),
             stats_copy.blocks_processed_count,
             block_processing_speed,
             if let Some(duration) = time_to_catch_the_tip_duration {
@@ -139,7 +140,7 @@ async fn lake_logger(
                 "".to_string()
             }
         );
-        prev_done_count = stats_copy.blocks_processed_count;
+        prev_blocks_processed_count = stats_copy.blocks_processed_count;
     }
 }
 
@@ -178,7 +179,7 @@ async fn handle_message(
 ) -> anyhow::Result<()> {
     let block_height = streamer_message.block.header.height;
     let mut stats_lock = stats.lock().await;
-    stats_lock.blocks_processing.insert(block_height);
+    stats_lock.block_heights_processing.insert(block_height);
     drop(stats_lock);
 
     let base_key = format!("{:0>12}", streamer_message.block.header.height);
@@ -202,7 +203,7 @@ async fn handle_message(
         put_object_or_retry(client.clone(), bucket.clone(), shard_json, key).await;
     }
     let mut stats_lock = stats.lock().await;
-    stats_lock.blocks_processing.remove(&block_height);
+    stats_lock.block_heights_processing.remove(&block_height);
     stats_lock.blocks_processed_count += 1;
     stats_lock.last_processed_block_height = block_height;
     drop(stats_lock);
