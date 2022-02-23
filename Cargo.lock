@@ -2711,6 +2711,7 @@ name = "near-lake"
 version = "0.1.0-rc.0"
 dependencies = [
  "actix",
+ "anyhow",
  "aws-config",
  "aws-endpoint",
  "aws-sdk-s3",
@@ -2718,6 +2719,7 @@ dependencies = [
  "clap",
  "futures",
  "itertools",
+ "near-client",
  "near-indexer",
  "near-indexer-primitives",
  "openssl-probe",
