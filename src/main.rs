@@ -2,10 +2,10 @@ use std::sync::Arc;
 
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_s3::{ByteStream, Client, Region, Endpoint};
-use http::Uri;
 use clap::Parser;
 use configs::{Opts, SubCommand};
 use futures::StreamExt;
+use http::Uri;
 use tokio::sync::Mutex;
 use tracing_subscriber::EnvFilter;
 
