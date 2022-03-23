@@ -168,7 +168,7 @@ async fn listen_blocks(
         let s3_endpoint = endpoint.parse::<Uri>().unwrap();
         s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint));
     }
-    // let client = Client::new(&shared_config);
+
     let client = Client::from_conf(s3_conf.build());
 
     let mut handle_messages = tokio_stream::wrappers::ReceiverStream::new(stream)
