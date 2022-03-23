@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use aws_config::meta::region::RegionProviderChain;
-use aws_sdk_s3::{ByteStream, Client, Region};
+use aws_sdk_s3::{ByteStream, Client, Region, Endpoint};
+use http::Uri;
 use clap::Parser;
 use configs::{Opts, SubCommand};
 use futures::StreamExt;
@@ -64,6 +65,7 @@ fn main() {
 
                 listen_blocks(
                     stream,
+                    args.endpoint,
                     args.bucket,
                     args.region,
                     args.concurrency,
@@ -146,6 +148,7 @@ async fn lake_logger(
 
 async fn listen_blocks(
     stream: tokio::sync::mpsc::Receiver<near_indexer_primitives::StreamerMessage>,
+    endpoint: String,
     bucket: String,
     region: String,
     concurrency: std::num::NonZeroU16,
@@ -155,7 +158,18 @@ async fn listen_blocks(
         .or_default_provider()
         .or_else(Region::new("eu-central-1"));
     let shared_config = aws_config::from_env().region(region_provider).load().await;
-    let client = Client::new(&shared_config);
+    let mut s3_conf = aws_sdk_s3::config::Builder::from(&shared_config);
+    if !endpoint.is_empty() {
+        tracing::info!(
+            target: INDEXER,
+            "Custom S3 Endpoint used: {} ...",
+            endpoint.to_string()
+        );
+        let s3_endpoint = endpoint.parse::<Uri>().unwrap();
+        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint));
+    }
+    // let client = Client::new(&shared_config);
+    let client = Client::from_conf(s3_conf.build());
 
     let mut handle_messages = tokio_stream::wrappers::ReceiverStream::new(stream)
         .map(|streamer_message| {
