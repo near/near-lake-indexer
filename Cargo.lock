@@ -2724,6 +2724,7 @@ dependencies = [
  "aws-smithy-http",
  "clap",
  "futures",
+ "http",
  "humantime",
  "itertools",
  "near-client",

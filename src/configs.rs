@@ -30,8 +30,8 @@ pub(crate) enum SubCommand {
 #[derive(Parser, Debug, Clone)]
 pub(crate) struct RunArgs {
     /// AWS API Endpoint
-    #[clap(long, default_value = "")]
-    pub endpoint: String,
+    #[clap(long)]
+    pub endpoint: Option<String>,
     /// Name of S3 bucket
     #[clap(long)]
     pub bucket: String,

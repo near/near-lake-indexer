@@ -148,7 +148,7 @@ async fn lake_logger(
 
 async fn listen_blocks(
     stream: tokio::sync::mpsc::Receiver<near_indexer_primitives::StreamerMessage>,
-    endpoint: String,
+    endpoint: Option<String>,
     bucket: String,
     region: String,
     concurrency: std::num::NonZeroU16,
@@ -159,14 +159,15 @@ async fn listen_blocks(
         .or_else(Region::new("eu-central-1"));
     let shared_config = aws_config::from_env().region(region_provider).load().await;
     let mut s3_conf = aws_sdk_s3::config::Builder::from(&shared_config);
-    if !endpoint.is_empty() {
+    // Owerride S3 endpoint in case you want to use custom solution
+    // like Minio or Localstack as a S3 compatible storage
+    if let Some(s3_endpoint) = endpoint {
+        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint.parse::<Uri>().unwrap()));
         tracing::info!(
             target: INDEXER,
-            "Custom S3 Endpoint used: {} ...",
-            endpoint.to_string()
+            "Custom S3 endpoint used: {}",
+            s3_endpoint
         );
-        let s3_endpoint = endpoint.parse::<Uri>().unwrap();
-        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint));
     }
 
     let client = Client::from_conf(s3_conf.build());
