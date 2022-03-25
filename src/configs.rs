@@ -29,6 +29,9 @@ pub(crate) enum SubCommand {
 
 #[derive(Parser, Debug, Clone)]
 pub(crate) struct RunArgs {
+    /// AWS S3 compatible API Endpoint
+    #[clap(long)]
+    pub endpoint: Option<String>,
     /// Name of S3 bucket
     #[clap(long)]
     pub bucket: String,
