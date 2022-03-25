@@ -95,6 +95,7 @@ Commands to run NEAR Lake, after `./target/release/near-lake`
 | `run`   	|                              	|                                                                  	| Runs the node                                                                                                                                                                                                                                                                                                                                                           	|
 |         	| `--bucket`                   	| Required                                                         	| AWS S3 Bucket name                                                                                                                                                                                                                                                                                                                                                      	|
 |         	| `--region`                   	| Required                                                         	| AWS S3 Bucket region                                                                                                                                                                                                                                                                                                                                                    	|
+|           | `--endpoint`                  | Optional                                                          | AWS S3 compatible API endpoint                                                                                                                                                                                                                                                                                                                                            |
 |         	| `--stream-while-syncing`     	| Optional                                                         	| If provided Indexer streams blocks while they appear on the node instead of waiting the node to be fully synced                                                                                                                                                                                                                                                         	|
 |         	| `--concurrency`              	| Default 1                                                        	| Defines the concurrency for the process of saving block data to AWS S3                                                                                                                                                                                                                                                                                                  	|
 |         	| `sync-from-latest`           	| One of the `sync-` subcommands is required                       	| Tells the node to start indexing from the latest block in the network                                                                                                                                                                                                                                                                                                   	|
@@ -163,6 +164,23 @@ We write all the data to AWS S3 buckets:
 
 - `near-lake-data-testnet` (`eu-central-1` region) for testnet
 - `near-lake-data-mainnet` (`eu-central-1` region) for mainnet
+
+## Custom S3 storage
+
+In case you want to run you own near-lake instance and store data in some S3 compatible storage ([Minio](https://min.io/) or [Localstack](https://localstack.cloud/) as example)
+You can owerride default S3 API endpoint by using `--endpoint` option
+
+- run minio
+
+```bash
+$ mkdir -p /data/near-lake-custom && minio server /data
+```
+
+- run near-lake
+
+```bash
+$ ./target/release/near-lake --home ~/.near/testnet run --endpoint http://127.0.0.1:9000 --bucket near-lake-custom sync-from-latest
+```
 
 ### Data structure
 
