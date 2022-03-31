@@ -1,11 +1,10 @@
 use std::sync::Arc;
 
 use aws_config::meta::region::RegionProviderChain;
-use aws_sdk_s3::{ByteStream, Client, Region, Endpoint};
+use aws_sdk_s3::{ByteStream, Client, Endpoint, Region};
 use clap::Parser;
 use configs::{Opts, SubCommand};
 use futures::StreamExt;
-use http::Uri;
 use tokio::sync::Mutex;
 use tracing_subscriber::EnvFilter;
 
@@ -148,7 +147,7 @@ async fn lake_logger(
 
 async fn listen_blocks(
     stream: tokio::sync::mpsc::Receiver<near_indexer_primitives::StreamerMessage>,
-    endpoint: Option<String>,
+    endpoint: Option<http::Uri>,
     bucket: String,
     region: String,
     concurrency: std::num::NonZeroU16,
@@ -162,12 +161,8 @@ async fn listen_blocks(
     // Owerride S3 endpoint in case you want to use custom solution
     // like Minio or Localstack as a S3 compatible storage
     if let Some(s3_endpoint) = endpoint {
-        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint.parse::<Uri>().unwrap()));
-        tracing::info!(
-            target: INDEXER,
-            "Custom S3 endpoint used: {}",
-            s3_endpoint
-        );
+        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint.clone()));
+        tracing::info!(target: INDEXER, "Custom S3 endpoint used: {}", s3_endpoint);
     }
 
     let client = Client::from_conf(s3_conf.build());
@@ -238,19 +233,14 @@ async fn put_object_or_retry(
             Ok(_) => break,
             Err(err) => {
                 // We haven't found the way to check credentials before the request has been sent
-                // This is the weird yet working solution to fail entire application if we got
+                // This is the weird yet working solution to throw an error if we got
                 // missing credentials error
-                match err {
-                    aws_smithy_http::result::SdkError::ConstructionFailure(box_error) => {
-                        if box_error.to_string()
-                            == String::from("No credentials in the property bag")
-                        {
-                            tracing::error!(target: INDEXER, "No credentials in the property bag");
-                            std::process::abort();
-                        }
+                if let aws_smithy_http::result::SdkError::ConstructionFailure(box_error) = err {
+                    if box_error.to_string() == *"No credentials in the property bag".to_string() {
+                        tracing::error!(target: INDEXER, "No credentials in the property bag");
+                        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
                     }
-                    _ => {}
-                };
+                }
                 tracing::warn!(
                     target: INDEXER,
                     "Failed to put {} to S3, retrying",

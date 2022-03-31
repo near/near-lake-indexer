@@ -31,7 +31,7 @@ pub(crate) enum SubCommand {
 pub(crate) struct RunArgs {
     /// AWS S3 compatible API Endpoint
     #[clap(long)]
-    pub endpoint: Option<String>,
+    pub endpoint: Option<http::Uri>,
     /// Name of S3 bucket
     #[clap(long)]
     pub bucket: String,
@@ -51,12 +51,12 @@ pub(crate) struct RunArgs {
 
 impl RunArgs {
     pub(crate) fn to_indexer_config(
-        self,
+        &self,
         home_dir: std::path::PathBuf,
     ) -> near_indexer::IndexerConfig {
         near_indexer::IndexerConfig {
             home_dir,
-            sync_mode: self.sync_mode.into(),
+            sync_mode: self.sync_mode.clone().into(),
             await_for_node_synced: if self.stream_while_syncing {
                 near_indexer::AwaitForNodeSyncedEnum::StreamWhileSyncing
             } else {
