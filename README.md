@@ -1,7 +1,5 @@
 # near-lake
 
-**NB! The project is in early stage of development and shouldn't be used in production environmental yet**
-
 NEAR Lake is an indexer built on top of [NEAR Indexer microframework](https://github.com/nearprotocol/nearcore/tree/master/chain/indexer)
 to watch the network and store all the events as JSON files on AWS S3.
 
@@ -208,3 +206,7 @@ All NEAR Lake AWS S3 buckets have [Request Payer](https://docs.aws.amazon.com/Am
 Once we [set up the public access to the buckets](https://github.com/near/near-lake/issues/22) anyone will be able to build their own code to read it through.
 
 For our own needs we are working on [NEAR Lake Framework](https://github.com/near/near-lake-framework) to have a simple way to create an indexer on top of the data stored by NEAR Lake itself.
+
+**See the [official announce of NEAR Lake Framework on the NEAR Gov Forum](https://gov.near.org/t/announcement-near-lake-framework-brand-new-word-in-indexer-building-approach/17668)**
+
+
