@@ -5,7 +5,6 @@ use aws_sdk_s3::{ByteStream, Client, Endpoint, Region};
 use clap::Parser;
 use configs::{Opts, SubCommand};
 use futures::StreamExt;
-use http::Uri;
 use tokio::sync::Mutex;
 use tracing_subscriber::EnvFilter;
 
@@ -148,7 +147,7 @@ async fn lake_logger(
 
 async fn listen_blocks(
     stream: tokio::sync::mpsc::Receiver<near_indexer_primitives::StreamerMessage>,
-    endpoint: Option<String>,
+    endpoint: Option<http::Uri>,
     bucket: String,
     region: String,
     concurrency: std::num::NonZeroU16,
@@ -162,8 +161,7 @@ async fn listen_blocks(
     // Owerride S3 endpoint in case you want to use custom solution
     // like Minio or Localstack as a S3 compatible storage
     if let Some(s3_endpoint) = endpoint {
-        s3_conf =
-            s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint.parse::<Uri>().unwrap()));
+        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint.clone()));
         tracing::info!(target: INDEXER, "Custom S3 endpoint used: {}", s3_endpoint);
     }
 
