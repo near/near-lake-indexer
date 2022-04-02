@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+* Minor fix: avoid division by zero in stats printer function
+
 ## 0.1.0
 
 * Make info logs easy to reason about (ref https://github.com/near/near-lake/issues/11)
