@@ -115,7 +115,7 @@ async fn lake_logger(
             - prev_blocks_processed_count) as f64)
             / (interval_secs as f64);
 
-        let time_to_catch_the_tip_duration =
+        let time_to_catch_the_tip_duration = if block_processing_speed > 0.0 {
             if let Ok(block_height) = utils::fetch_latest_block(&view_client).await {
                 Some(std::time::Duration::from_millis(
                     (((block_height - stats_copy.last_processed_block_height) as f64
@@ -124,7 +124,10 @@ async fn lake_logger(
                 ))
             } else {
                 None
-            };
+            }
+        } else {
+            None
+        };
 
         tracing::info!(
             target: INDEXER,
