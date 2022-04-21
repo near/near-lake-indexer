@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+* Fix: Calculation time to catch up with the network
+* Upgrade `nearcore` to 1.26.0-rc.1
+
 ## 0.1.1
 
 * Minor fix: avoid division by zero in stats printer function
