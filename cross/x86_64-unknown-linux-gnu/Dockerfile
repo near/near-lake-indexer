@@ -1,4 +1,14 @@
-FROM rustembedded/cross:x86_64-unknown-linux-gnu-0.2.1
+FROM ubuntu:18.04
 
-RUN apt-get update && \
-    apt-get install --assume-yes binutils-dev libudev-dev clang-8 llvm-8 gcc
+# Copy from nearcore:
+# https://github.com/near/nearcore/blob/master/Dockerfile
+RUN apt-get update -qq && \
+    apt-get install -y \
+        git \
+        cmake \
+        g++ \
+        pkg-config \
+        libssl-dev \
+        curl \
+        llvm \
+        clang
