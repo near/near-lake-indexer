@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+* Upgrade `nearcore` to 1.26.0
+
 ## 0.1.2
 
 * Fix: Calculation time to catch up with the network
