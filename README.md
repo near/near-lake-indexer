@@ -1,4 +1,4 @@
-# near-lake
+# near-lake-indexer
 
 NEAR Lake is an indexer built on top of [NEAR Indexer microframework](https://github.com/nearprotocol/nearcore/tree/master/chain/indexer)
 to watch the network and store all the events as JSON files on AWS S3.
