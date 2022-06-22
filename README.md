@@ -7,7 +7,7 @@ to watch the network and store all the events as JSON files on AWS S3.
 
 We used to have [NEAR Indexer for Explorer](https://github.com/near/near-indexer-for-explorer) that was watching for 
 the network and stored all the events to PostgreSQL database. PostgreSQL became the main bottleneck for us. After some
-brainstorming sessions and researches we decided to go with [SingleStore](https://www.singlestore.com/) database. 
+brainstorming sessions and researches we decided to go with AWS Aurora database.
 
 Knowing the fact that [NEAR Explorer](https://explorer.near.org) is not the only project that uses the Indexer for Explorer's 
 database, we wanted to come up with the concept that will allow us to cover even more projects that can benefit from the data 
