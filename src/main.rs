@@ -67,6 +67,7 @@ fn main() {
                     args.endpoint,
                     args.bucket,
                     args.region,
+                    args.fallback_region,
                     args.concurrency,
                     Arc::clone(&stats),
                 )
@@ -154,12 +155,13 @@ async fn listen_blocks(
     endpoint: Option<http::Uri>,
     bucket: String,
     region: String,
+    fallback_region: String,
     concurrency: std::num::NonZeroU16,
     stats: Arc<Mutex<Stats>>,
 ) {
     let region_provider = RegionProviderChain::first_try(Some(region).map(Region::new))
         .or_default_provider()
-        .or_else(Region::new("eu-central-1"));
+        .or_else(Region::new(fallback_region));
     let shared_config = aws_config::from_env().region(region_provider).load().await;
     let mut s3_conf = aws_sdk_s3::config::Builder::from(&shared_config);
     // Owerride S3 endpoint in case you want to use custom solution

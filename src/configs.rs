@@ -38,6 +38,9 @@ pub(crate) struct RunArgs {
     /// Region of S3 bucket
     #[clap(long)]
     pub region: String,
+    /// Fallback region of S3
+    #[clap(long, default_value = "eu-central-1")]
+    pub fallback_region: String,
     /// Force streaming while node is syncing
     #[clap(long)]
     pub stream_while_syncing: bool,
