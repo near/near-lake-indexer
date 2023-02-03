@@ -24,7 +24,7 @@ pub(crate) enum SubCommand {
     /// Run NEAR Indexer Example. Start observe the network
     Run(RunArgs),
     /// Initialize necessary configs
-    Init(InitConfigArgs),
+    Init(Box<InitConfigArgs>), // clippy suggestion: consider boxing the large fields to reduce the total size of the enum
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -44,6 +44,9 @@ pub(crate) struct RunArgs {
     /// Force streaming while node is syncing
     #[clap(long)]
     pub stream_while_syncing: bool,
+    /// Tells whether to validate the genesis file before starting
+    #[clap(long)]
+    pub validate_genesis: bool,
     /// Sets the concurrency for indexing. Note: concurrency (set to 2+) may lead to warnings due to tight constraints between transactions and receipts (those will get resolved eventually, but unless it is the second pass of indexing, concurrency won't help at the moment).
     #[clap(long, default_value = "1")]
     pub concurrency: std::num::NonZeroU16,
@@ -65,6 +68,7 @@ impl RunArgs {
             } else {
                 near_indexer::AwaitForNodeSyncedEnum::WaitForFullSync
             },
+            validate_genesis: self.validate_genesis,
         }
     }
 }
@@ -129,6 +133,8 @@ pub(crate) struct InitConfigArgs {
     /// Specify a custom download URL for the genesis-file.
     #[clap(long)]
     pub download_genesis_url: Option<String>,
+    #[clap(long)]
+    pub donwload_genesis_records_url: Option<String>,
     /// Customize max_gas_burnt_view runtime limit.  If not specified, value
     /// from genesis configuration will be taken.
     #[clap(long)]

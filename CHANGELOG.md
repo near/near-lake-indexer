@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.19
+
+* Upgrade Indexer Framework to be based on [nearcore 1.31.0-rc.4](https://github.com/near/nearcore/commit/f709cdc89adfa0594df5ac20212e75402a1b862e)
+
+### Heads-up
+
+Some updates on the `nearcore` side affected the Indexer Framework:
+- `near_client` calls require the usage of `near_o11y::WithSpanContextExt`. Thus we depend on `near-o11y` explicitly since this version
+- `init_configs` function has been extended with a parameter `download_records_url: Option<&str>`. Thus `init` command of the Lake Indexer has been extended with the parameter `donwload_genesis_records_url`
+- `IndexerConfig` requires new parameter `validate_genesis: bool` so the `run` command has been extended with the key `--validate-genesis`
+
 ## 0.1.18
 
 * Upgrade Indexer Framework to be based on [nearcore 1.30.1](https://github.com/near/nearcore/commit/e2bf95c0737f7e80c70e77ae82b439342119148a)
