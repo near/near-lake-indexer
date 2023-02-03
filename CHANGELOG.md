@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.18
+
+* Upgrade Indexer Framework to be based on [nearcore 1.30.1](https://github.com/near/nearcore/commit/e2bf95c0737f7e80c70e77ae82b439342119148a)
+
 ## 0.1.17
 
 * Upgrade Indexer Framework to be based on [nearcore 1.30.0](https://github.com/near/nearcore/commit/9b0275de057a01f87c259580f93e58f746da75aa)
