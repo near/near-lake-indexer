@@ -27,7 +27,7 @@ jobs:
       matrix:
         include:
         - build: linux-x86_64
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           rust: stable
           target: x86_64-unknown-linux-gnu
 
@@ -69,7 +69,7 @@ jobs:
 
   rustfmt:
     name: rustfmt
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
