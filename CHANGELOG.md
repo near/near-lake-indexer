@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.21-rc.1
+
+* Upgrade Indexer Framework to be based on [nearcore 1.32.0-906e6f3](https://github.com/near/nearcore/commit/906e6f32b80e0976d783c822b7c95871d3cf728b)
+
 ## 0.1.21-rc.0
 
 * Add support for meta transactions by upgrading near crates to [0.16](https://github.com/near/nearcore/commit/1a18003fe2f0873caac670bc0b86f8d59842b20a)
