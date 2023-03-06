@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.21
+
+* Upgrade Indexer Framework to be based on [nearcore 1.32.0-rc.1](https://github.com/near/nearcore/releases/tag/1.32.0-rc.1)
+* Updated the minimal Rust version to `1.67.1`
+
 ## 0.1.21-rc.0
 
 * Add support for meta transactions by upgrading near crates to [0.16](https://github.com/near/nearcore/commit/1a18003fe2f0873caac670bc0b86f8d59842b20a)
