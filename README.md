@@ -5,16 +5,16 @@ to watch the network and store all the events as JSON files on AWS S3.
 
 ## Concept
 
-We used to have [NEAR Indexer for Explorer](https://github.com/near/near-indexer-for-explorer) that was watching for 
+We used to have [NEAR Indexer for Explorer](https://github.com/near/near-indexer-for-explorer) that was watching for
 the network and stored all the events to PostgreSQL database. PostgreSQL became the main bottleneck for us. After some
 brainstorming sessions and researches we decided to go with AWS Aurora database.
 
-Knowing the fact that [NEAR Explorer](https://explorer.near.org) is not the only project that uses the Indexer for Explorer's 
-database, we wanted to come up with the concept that will allow us to cover even more projects that can benefit from the data 
+Knowing the fact that [NEAR Explorer](https://explorer.near.org) is not the only project that uses the Indexer for Explorer's
+database, we wanted to come up with the concept that will allow us to cover even more projects that can benefit from the data
 from NEAR Protocol.
 
 That's why we decided to store the data from the blockchain as JSON files on AWS S3 bucket that can be used
-as a data source for different projects. 
+as a data source for different projects.
 
 As "Indexer for Explorer Remake" project we are going to have `near-lake` as a data writer. There's going to be
 another project that will read from AWS S3 bucket and will store all the data in SingleStore database. This
@@ -25,7 +25,7 @@ source for NEAR Explorer.
 
 The final setup consists of the following components:
 * AWS S3 Bucket as a storage
-* NEAR Lake binary that operates as a regular NEAR Protocol peer-to-peer node, so you will operate it as 
+* NEAR Lake binary that operates as a regular NEAR Protocol peer-to-peer node, so you will operate it as
   any other [Regular/RPC Node in NEAR](https://docs.near.org/docs/develop/node/rpc/hardware-rpc)
 
 ### Prepare Development Environment
@@ -110,26 +110,42 @@ After the network is synced, you should see logs of every block height currently
 
 ## Syncing
 
-Whenever you run NEAR Lake for any network except localnet you'll need to sync with the network. 
-This is required because it's a natural behavior of `nearcore` node and NEAR Lake is a wrapper 
-for the regular `nearcore` node. In order to work and index the data your node must be synced 
-with the network. This process can take a while, so we suggest to download a fresh backup of 
+Whenever you run NEAR Lake for any network except localnet you'll need to sync with the network.
+This is required because it's a natural behavior of `nearcore` node and NEAR Lake is a wrapper
+for the regular `nearcore` node. In order to work and index the data your node must be synced
+with the network. This process can take a while, so we suggest to download a fresh backup of
 the `data` folder and put it in you `--home-dir` of your choice (by default it is `~/.near`)
 
-Running your NEAR Lake node on top of a backup data will reduce the time of syncing process 
+Running your NEAR Lake node on top of a backup data will reduce the time of syncing process
 because your node will download only the data after the backup was cut and it takes reasonable amount time.
 
 All the backups can be downloaded from the public S3 bucket which contains latest daily snapshots:
 
-* [Recent 5-epoch Mainnet data folder](https://near-protocol-public.s3-accelerate.amazonaws.com/backups/mainnet/rpc/data.tar)
-* [Recent 5-epoch Testnet data folder](https://near-protocol-public.s3-accelerate.amazonaws.com/backups/testnet/rpc/data.tar)
+You will need [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) to be installed in order to download the backups.
+
+### Mainnet
+
+```
+$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/mainnet/rpc/latest .
+$ LATEST=$(cat latest)
+$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/rpc/$LATEST ~/.near/data
+```
+
+### Testnet
+
+```
+$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/testnet/rpc/latest .
+$ LATEST=$(cat latest)
+$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/rpc/$LATEST ~/.near/data
+```
+
 
 
 ## Running NEAR Lake as an archival node
 
-It's not necessary but in order to index everything in the network it is better to do it from the genesis. 
-`nearcore` node is running in non-archival mode by default. That means that the node keeps data only 
-for [5 last epochs](https://docs.near.org/concepts/basics/epoch). In order to index data from the genesis 
+It's not necessary but in order to index everything in the network it is better to do it from the genesis.
+`nearcore` node is running in non-archival mode by default. That means that the node keeps data only
+for [5 last epochs](https://docs.near.org/concepts/basics/epoch). In order to index data from the genesis
 we need to turn the node in archival mode.
 
 To do it we need to update `config.json` located in `--home-dir` (by default it is `~/.near`).
@@ -145,8 +161,8 @@ Find next keys in the config and update them as following:
 }
 ```
 
-The syncing process in archival mode can take a lot of time, so it's better to download a backup provided by NEAR 
-and put it in your `data` folder. After that your node will download only the data after the backup was cut and it 
+The syncing process in archival mode can take a lot of time, so it's better to download a backup provided by NEAR
+and put it in your `data` folder. After that your node will download only the data after the backup was cut and it
 takes reasonable amount time.
 
 
