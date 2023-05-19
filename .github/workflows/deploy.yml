@@ -1,0 +1,39 @@
+name: deploy
+
+on:
+  push:
+    # Enable when testing release infrastructure on a branch.
+    branches:
+      - ci/test
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    environment: testnet
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Deploy release
+        run: |
+          for instance_with_zone in $(echo "$INSTANCES_WITH_ZONE"); do
+            IFS=':' read -r instance zone <<< "$instance_with_zone"
+            gcloud compute scp --zone $zone ./scripts/upgrade.sh ubuntu@$instance:~/upgrade.sh
+            gcloud --project "$PROJECT_ID" compute ssh --zone $zone ubuntu@$instance --command "~/upgrade.sh"
+          done
+        env:
+          INSTANCES_WITH_ZONE: ${{ vars.INSTANCES_WITH_ZONE }}
+          PROJECT_ID: ${{ vars.PROJECT_ID }}
+
+      - name: Clean up keys
+        if: always()
+        run: rm -rf /home/runner/.ssh/
