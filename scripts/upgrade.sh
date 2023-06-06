@@ -21,10 +21,10 @@ if [[ "$latest_version" == "$prev_version" ]]; then
     exit 1
 fi
 
-print_yellow "Backing up current near-lake binary to ~/near-lake-$(prev_version)..."
-mv ~/near-lake ~/near-lake-$(prev_version)
+print_yellow "Backing up current near-lake binary to ~/near-lake-$prev_version..."
+mv ~/near-lake ~/near-lake-$prev_version
 
-print_yellow "Moving near-lake v$(latest_version) binary to ~/near-lake..."
+print_yellow "Moving near-lake v$latest_version binary to ~/near-lake..."
 mv ~/near-lake-latest ~/near-lake
 
 print_yellow "Restarting near-lake systemd..."
