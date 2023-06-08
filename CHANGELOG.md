@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.24
+## 0.1.25
+
+* Fixed the dependency tree from `0.1.24` release that was broken due to the `nearcore` release.
+
+## 0.1.24 (broken build see #74)
 
 * Upgrade Indexer Framework to be based on [nearcore 1.34.0](https://github.com/near/nearcore/releases/tag/1.34.0)
 
