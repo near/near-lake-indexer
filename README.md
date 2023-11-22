@@ -78,6 +78,24 @@ For example, in order to track all shards, you just add the shard #0 to the list
 ...
 ```
 
+
+### (Optional) Configuration via environment variables
+
+You can also configure NEAR Lake via environment variables. This is useful if you want to run NEAR Lake in a Docker container.
+
+Add `.env` file to the root of the project with the following content:
+
+```
+BUCKET=near-lake-custom # name of the bucket to store data in (e.g. near-lake-data-testnet or near-lake-data-mainnet)
+REGION=eu-central-1
+AWS_DEFAULT_REGION=eu-central-1
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE # either via env or via ~/.aws
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY # either via env or via ~/.aws
+ENDPOINT=http://localhost:4566 # for the custom S3 storage endpoing (e.g. Minio or Localstack)
+```
+
+Or you can pass them via command line (see below)
+
 ### Run NEAR Lake
 
 Commands to run NEAR Lake, after `./target/release/near-lake`
