@@ -164,7 +164,7 @@ async fn listen_blocks(
     concurrency: std::num::NonZeroU16,
     stats: Arc<Mutex<Stats>>,
 ) {
-    let region_provider = RegionProviderChain::first_try(Some(region).map(Region::new))
+    let region_provider = RegionProviderChain::first_try(Some(Region::new(region)))
         .or_default_provider()
         .or_else(Region::new(fallback_region));
     let shared_config = aws_config::from_env().region(region_provider).load().await;
