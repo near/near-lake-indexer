@@ -10,7 +10,7 @@ on:
 jobs:
   create-release:
     name: create-release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # env:
       # Set to force version number, e.g., when no tag exists.
       # NEAR_LAKE_VERSION: TEST-0.0.0
