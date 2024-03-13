@@ -30,13 +30,13 @@ pub(crate) enum SubCommand {
 #[derive(Parser, Debug, Clone)]
 pub(crate) struct RunArgs {
     /// AWS S3 compatible API Endpoint
-    #[clap(long)]
+    #[clap(long, env)]
     pub endpoint: Option<http::Uri>,
     /// Name of S3 bucket
-    #[clap(long)]
+    #[clap(long, env)]
     pub bucket: String,
     /// Region of S3 bucket
-    #[clap(long)]
+    #[clap(long, env)]
     pub region: String,
     /// Fallback region of S3
     #[clap(long, default_value = "eu-central-1")]

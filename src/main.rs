@@ -9,6 +9,7 @@ use tokio::sync::Mutex;
 use tracing_subscriber::EnvFilter;
 
 mod configs;
+mod metrics;
 mod utils;
 
 const INDEXER: &str = "near_lake";
@@ -31,6 +32,7 @@ impl Stats {
 }
 
 fn main() {
+    dotenv::dotenv().ok();
     // We use it to automatically search the for root certificates to perform HTTPS calls
     // (sending telemetry and downloading genesis)
     openssl_probe::init_ssl_cert_env_vars();
@@ -47,6 +49,17 @@ fn main() {
                 "NEAR Lake v{} starting...",
                 env!("CARGO_PKG_VERSION")
             );
+
+            // This will set the near_lake_build_info metric
+            // e.g. near_lake_build_info{build="1.37.1",release="0.1.29",rustc_version="1.75.0"}
+            metrics::NODE_BUILD_INFO.reset();
+            metrics::NODE_BUILD_INFO
+                .with_label_values(&[
+                    env!("CARGO_PKG_VERSION"),
+                    env!("BUILD_VERSION"),
+                    env!("RUSTC_VERSION"),
+                ])
+                .inc();
 
             let system = actix::System::new();
             system.block_on(async move {
@@ -163,7 +176,7 @@ async fn listen_blocks(
     concurrency: std::num::NonZeroU16,
     stats: Arc<Mutex<Stats>>,
 ) {
-    let region_provider = RegionProviderChain::first_try(Some(region).map(Region::new))
+    let region_provider = RegionProviderChain::first_try(Some(Region::new(region)))
         .or_default_provider()
         .or_else(Region::new(fallback_region));
     let shared_config = aws_config::from_env().region(region_provider).load().await;
@@ -225,6 +238,7 @@ async fn handle_message(
     let mut stats_lock = stats.lock().await;
     stats_lock.block_heights_processing.remove(&block_height);
     stats_lock.blocks_processed_count += 1;
+    metrics::BLOCKS_DONE.inc();
     stats_lock.last_processed_block_height = block_height;
     drop(stats_lock);
     Ok(())
@@ -251,6 +265,7 @@ async fn put_object_or_retry(
                         tokio::time::sleep(std::time::Duration::from_secs(2)).await;
                     }
                 }
+                metrics::RETRY_COUNT.inc();
                 tracing::warn!(
                     target: INDEXER,
                     "Failed to put {} to S3, retrying",
