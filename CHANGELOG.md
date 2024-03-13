@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.0.0-rc.1
+
+After two years of successful work in production we realized that no major changes or improvements have been made to the codebase. The codebase is stable and mature enough to be considered as a stable release. Thus, we are happy to announce the first release candidate of the NEAR Lake 🎉
+
+* Upgrade Indexer Framework to be based on [nearcore 1.38.0-rc.2](https://github.com/near/nearcore/releases/tag/1.38.0-rc.2)
+* Observability improvements:
+  * `near_lake_block_retry_count_total` Total number of retries for storing indexing blocks to S3
+  * `near_lake_block_done_total` Total number of indexed blocks
+  * `near_lake_build_info` similar to the existing near_build_info, but I cannot reuse that since it's private. It will expose the build info. Example:
+  ```
+  near_lake_build_info{build="1.37.1",release="0.1.29",rustc_version="1.75.0"}
+  ```
+
+## 0.1.29
+
+* Upgrade Indexer Framework to be based on [nearcore 1.37.0](https://github.com/near/nearcore/releases/tag/1.37.0)
+
+## 0.1.28
+
+* Upgrade Indexer Framework to be based on [nearcore 1.36.5](https://github.com/near/nearcore/releases/tag/1.36.5)
+
 ## 0.1.27
 
 * Upgrade Indexer Framework to be based on [nearcore 1.36.0-rc.1](https://github.com/near/nearcore/releases/tag/1.36.0-rc.1)
