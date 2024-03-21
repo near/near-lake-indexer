@@ -244,4 +244,25 @@ For our own needs we are working on [NEAR Lake Framework](https://github.com/nea
 
 **See the [official announce of NEAR Lake Framework on the NEAR Gov Forum](https://gov.near.org/t/announcement-near-lake-framework-brand-new-word-in-indexer-building-approach/17668)**
 
+### Common Errors & Solutions
+
+#### If you don't have any peer
+
+Here is a script that asks the RPC node about its peers and makes a list of boot nodes for you:
+
+```
+--boot-nodes `curl -X POST https://rpc.mainnet.near.org \
+  -H "Content-Type: application/json" \
+  -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | \
+jq '.result.active_peers as $list1 | .result.known_producers as $list2 |
+$list1[] as $active_peer | $list2[] |
+select(.peer_id == $active_peer.id) |
+"\(.peer_id)@\($active_peer.addr)"' |\
+awk 'NR>2 {print ","} length($0) {print p} {p=$0}' ORS="" | sed 's/"//g'
+```
 

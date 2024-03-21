@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0-rc.2
+
+* Upgrade Indexer Framework to be based on commit [511414a](https://github.com/near/nearcore/commit/511414a5091c3bef5c447a5644ba903dc050b715)
+
+This commit adds the local cache to improve the speed of indexing during the congestion of the network.
+
+This release is expected to be compatible with `nearcore` 1.38.x but we don't expect that improvement to be cherry-picked to the 1.38.x release.
+
+* Bump the minimal supported Rust version to `1.76.0` (following the `nearcore` master branch)
+
 ## 1.0.0-rc.1
 
 After two years of successful work in production we realized that no major changes or improvements have been made to the codebase. The codebase is stable and mature enough to be considered as a stable release. Thus, we are happy to announce the first release candidate of the NEAR Lake 🎉
