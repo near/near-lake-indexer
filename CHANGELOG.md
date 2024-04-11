@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+* Upgrade Indexer Framework to be based on version 1.39.0 and commit [8c2085b](https://github.com/near/nearcore/commit/2b2c06edb90400fb934ae08a7083250266bff780)
+
+This commit is based on 1.39.0 release of `nearcore` and includes the improvement of local cache from the `rc.2` release since that commit hasn't get into the 1.39.x release.
+
 ## 1.0.0
 
 * Upgrade Indexer Framework to be based on version 1.38.2 and commit [8c2085b](https://github.com/near/nearcore/commit/8c2085b84ce7643fada081bfc5986b09b7e575eb)
