@@ -1,6 +1,6 @@
 [package]
 name = "near-lake"
-version = "1.1.1"
+version = "1.2.0-rc.1"
 authors = ["Near Inc <hello@nearprotocol.com>"]
 edition = "2021"
 
@@ -11,27 +11,25 @@ rustc_version = "0.4"
 [dependencies]
 actix = "0.13.0"
 anyhow = "1.0.51"
-aws-config = "0.6.0"
-aws-endpoint = "0.6.0"
-aws-sdk-s3 = "0.6.0"
-aws-smithy-http = "0.36.0"
-clap = { version = "3.1.6", features = ["color", "derive", "env"] }
+aws-config = "1.4.0"
+aws-sdk-s3 = "1.29.0"
+clap = { version = "4.5.4", features = ["color", "derive", "env"] }
 dotenv = "0.15.0"
 futures = "0.3.5"
-http = "0.2"
+http = "1.1.0"
 humantime = "2.1.0"
-itertools = "0.10.0"
+itertools = "0.13.0"
 openssl-probe = "0.1.5"
 once_cell = "1.19.0"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0.55"
-tokio = { version = "1.1", features = ["sync", "time"] }
+tokio = { version = "1.37.0", features = ["sync", "time"] }
 tokio-stream = { version = "0.1" }
-tracing = "0.1.34"
-tracing-subscriber = "0.2.4"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
 
 # Please, update the supported nearcore version in .cargo/config.toml file
-near-indexer = { git = "https://github.com/near/nearcore", rev = "60c8ad88e5615e173963ac73e318db9337a17134" }
-near-indexer-primitives = { git = "https://github.com/near/nearcore", rev = "60c8ad88e5615e173963ac73e318db9337a17134" }
-near-client = { git = "https://github.com/near/nearcore", rev = "60c8ad88e5615e173963ac73e318db9337a17134" }
-near-o11y = { git = "https://github.com/near/nearcore", rev = "60c8ad88e5615e173963ac73e318db9337a17134" }
+near-indexer = { git = "https://github.com/near/nearcore", rev = "08941a3c070eca2e6163a4ad1eaed1f0d3ee233c" }
+near-indexer-primitives = { git = "https://github.com/near/nearcore", rev = "08941a3c070eca2e6163a4ad1eaed1f0d3ee233c" }
+near-client = { git = "https://github.com/near/nearcore", rev = "08941a3c070eca2e6163a4ad1eaed1f0d3ee233c" }
+near-o11y = { git = "https://github.com/near/nearcore", rev = "08941a3c070eca2e6163a4ad1eaed1f0d3ee233c" }
