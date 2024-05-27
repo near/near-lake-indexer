@@ -1,4 +1,4 @@
-FROM rust:1.71 AS builder
+FROM rust:1.77 AS builder
 WORKDIR /tmp/
 
 # Copy from nearcore:
