@@ -1,7 +1,7 @@
+use std::error::Error;
 use std::sync::Arc;
 
 use aws_config::meta::region::RegionProviderChain;
-use aws_sdk_s3::{ByteStream, Client, Endpoint, Region};
 use clap::Parser;
 use configs::{Opts, SubCommand};
 use futures::StreamExt;
@@ -176,19 +176,23 @@ async fn listen_blocks(
     concurrency: std::num::NonZeroU16,
     stats: Arc<Mutex<Stats>>,
 ) {
-    let region_provider = RegionProviderChain::first_try(Some(Region::new(region)))
-        .or_default_provider()
-        .or_else(Region::new(fallback_region));
-    let shared_config = aws_config::from_env().region(region_provider).load().await;
+    let region_provider =
+        RegionProviderChain::first_try(Some(aws_sdk_s3::config::Region::new(region)))
+            .or_default_provider()
+            .or_else(aws_sdk_s3::config::Region::new(fallback_region));
+    let shared_config = aws_config::defaults(aws_config::BehaviorVersion::latest())
+        .region(region_provider)
+        .load()
+        .await;
     let mut s3_conf = aws_sdk_s3::config::Builder::from(&shared_config);
     // Owerride S3 endpoint in case you want to use custom solution
     // like Minio or Localstack as a S3 compatible storage
     if let Some(s3_endpoint) = endpoint {
-        s3_conf = s3_conf.endpoint_resolver(Endpoint::immutable(s3_endpoint.clone()));
+        s3_conf = s3_conf.endpoint_url(s3_endpoint.to_string());
         tracing::info!(target: INDEXER, "Custom S3 endpoint used: {}", s3_endpoint);
     }
 
-    let client = Client::from_conf(s3_conf.build());
+    let client = aws_sdk_s3::Client::from_conf(s3_conf.build());
 
     let mut handle_messages = tokio_stream::wrappers::ReceiverStream::new(stream)
         .map(|streamer_message| {
@@ -205,7 +209,7 @@ async fn listen_blocks(
 }
 
 async fn handle_message(
-    client: &Client,
+    client: &aws_sdk_s3::Client,
     streamer_message: near_indexer_primitives::StreamerMessage,
     bucket: String,
     stats: Arc<Mutex<Stats>>,
@@ -246,30 +250,37 @@ async fn handle_message(
 
 // Saves an object to a bucket or retries forever. Aborts the entire process if credentials are missing
 async fn put_object_or_retry(
-    client: Client,
+    client: aws_sdk_s3::Client,
     bucket: String,
     content: serde_json::Value,
     filename: String,
 ) {
     loop {
-        let body = ByteStream::from(content.clone().to_string().as_bytes().to_vec());
+        let body = aws_sdk_s3::primitives::ByteStream::from(
+            content.clone().to_string().as_bytes().to_vec(),
+        );
         match put_object(&client, &bucket, body, filename.as_str()).await {
             Ok(_) => break,
             Err(err) => {
                 // We haven't found the way to check credentials before the request has been sent
                 // This is the weird yet working solution to throw an error if we got
                 // missing credentials error
-                if let aws_smithy_http::result::SdkError::ConstructionFailure(box_error) = err {
-                    if box_error.to_string() == *"No credentials in the property bag".to_string() {
-                        tracing::error!(target: INDEXER, "No credentials in the property bag");
-                        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+                if let aws_sdk_s3::error::SdkError::ConstructionFailure(_) = err {
+                    if let Some(box_error) = err.source() {
+                        if box_error.to_string()
+                            == *"No credentials in the property bag".to_string()
+                        {
+                            tracing::error!(target: INDEXER, "No credentials in the property bag");
+                            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+                        }
                     }
                 }
                 metrics::RETRY_COUNT.inc();
                 tracing::warn!(
                     target: INDEXER,
-                    "Failed to put {} to S3, retrying",
-                    &filename
+                    "Failed to put {} to S3, retrying. Error: {:?}",
+                    &filename,
+                    err
                 );
             }
         }
@@ -278,11 +289,11 @@ async fn put_object_or_retry(
 
 // Adds an object to a bucket
 async fn put_object(
-    client: &Client,
+    client: &aws_sdk_s3::Client,
     bucket: &str,
-    body: ByteStream,
+    body: aws_sdk_s3::primitives::ByteStream,
     filename: &str,
-) -> Result<(), aws_smithy_http::result::SdkError<aws_sdk_s3::error::PutObjectError>> {
+) -> Result<(), aws_sdk_s3::error::SdkError<aws_sdk_s3::operation::put_object::PutObjectError>> {
     client
         .put_object()
         .bucket(bucket)
