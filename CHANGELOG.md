@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.2.0
+
+* Upgrade Indexer Framework to be based on [nearcore 1.40.0](https://github.com/near/nearcore/releases/tag/1.40.0)
+* Fix s3 endpoint resolver
+* Fix docker build
+
+## 1.2.0-rc.1
+
+* Upgrade Indexer Framework to be based on [nearcore 1.40.0-rc.1](https://github.com/near/nearcore/releases/tag/1.40.0-rc.1)
+* Bump the minimal supported Rust version to `1.77.0` (following the `nearcore` master branch)
+* Upgrade dependencies to the latest versions
+
+## 1.1.1
+
+* Upgrade Indexer Framework to be based on version 1.39.1 and commit [60c8ad8](https://github.com/near/nearcore/commit/60c8ad88e5615e173963ac73e318db9337a17134)
+
+This commit is based on 1.39.1 release of `nearcore` and includes the improvement of local cache from the `rc.2` release since that commit hasn't get into the 1.39.x release.
+
+The fix is expected to be included in 1.40.0 `nearcore` release.
+
+## 1.1.0
+
+* Upgrade Indexer Framework to be based on version 1.39.0 and commit [2b2c06e](https://github.com/near/nearcore/commit/2b2c06edb90400fb934ae08a7083250266bff780)
+
+This commit is based on 1.39.0 release of `nearcore` and includes the improvement of local cache from the `rc.2` release since that commit hasn't get into the 1.39.x release.
+
+## 1.0.0
+
+* Upgrade Indexer Framework to be based on version 1.38.2 and commit [8c2085b](https://github.com/near/nearcore/commit/8c2085b84ce7643fada081bfc5986b09b7e575eb)
+
+This commit is based on 1.38.2 release of `nearcore` and includes the improvement of local cache from the `rc.2` release since that commit hasn't get into the 1.38.x release.
+
 ## 1.0.0-rc.2
 
 * Upgrade Indexer Framework to be based on commit [511414a](https://github.com/near/nearcore/commit/511414a5091c3bef5c447a5644ba903dc050b715)
