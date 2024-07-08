@@ -2,7 +2,6 @@ use std::error::Error;
 use std::sync::Arc;
 
 use aws_config::meta::region::RegionProviderChain;
-use aws_sdk_s3::config::endpoint::{Endpoint, EndpointFuture, Params, ResolveEndpoint};
 use clap::Parser;
 use configs::{Opts, SubCommand};
 use futures::StreamExt;
@@ -14,17 +13,6 @@ mod metrics;
 mod utils;
 
 const INDEXER: &str = "near_lake";
-
-#[derive(Debug)]
-struct CustomS3EndpointResolver {
-    url: String,
-}
-
-impl ResolveEndpoint for CustomS3EndpointResolver {
-    fn resolve_endpoint(&self, _params: &Params) -> EndpointFuture<'_> {
-        EndpointFuture::ready(Ok(Endpoint::builder().url(self.url.clone()).build()))
-    }
-}
 
 #[derive(Debug, Clone)]
 struct Stats {
@@ -200,10 +188,7 @@ async fn listen_blocks(
     // Owerride S3 endpoint in case you want to use custom solution
     // like Minio or Localstack as a S3 compatible storage
     if let Some(s3_endpoint) = endpoint {
-        let endpoint_resolver = CustomS3EndpointResolver {
-            url: s3_endpoint.to_string(),
-        };
-        s3_conf = s3_conf.endpoint_resolver(endpoint_resolver);
+        s3_conf = s3_conf.endpoint_url(s3_endpoint.to_string());
         tracing::info!(target: INDEXER, "Custom S3 endpoint used: {}", s3_endpoint);
     }
 
@@ -293,9 +278,9 @@ async fn put_object_or_retry(
                 metrics::RETRY_COUNT.inc();
                 tracing::warn!(
                     target: INDEXER,
-                    ?err,
-                    "Failed to put {} to S3, retrying",
-                    &filename
+                    "Failed to put {} to S3, retrying. Error: {:?}",
+                    &filename,
+                    err
                 );
             }
         }
