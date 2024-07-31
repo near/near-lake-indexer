@@ -1,5 +1,11 @@
 # Changelog
 
+
+## 2.1.0-rc.1
+
+* Upgrade Indexer Framework to be based on [nearcore 2.1.0-rc.1](https://github.com/near/nearcore/releases/tag/2.1.0-rc.1)
+* Bump the minimal supported Rust version to `1.79.0` (following the `nearcore` master branch)
+
 ## 2.0.0-rc.1
 
 * Upgrade Indexer Framework to be based on [nearcore 2.0.0-rc.1](https://github.com/near/nearcore/releases/tag/2.0.0-rc.1)
