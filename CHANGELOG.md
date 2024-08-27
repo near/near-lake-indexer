@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.0-rc.1
+
+* Upgrade Indexer Framework to be based on [nearcore 2.2.0-rc.1](https://github.com/near/nearcore/releases/tag/2.2.0-rc.1)
+
 ## 2.1.1
 
 * Upgrade Indexer Framework to be based on [nearcore 2.1.1](https://github.com/near/nearcore/releases/tag/2.1.1)
