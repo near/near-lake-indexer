@@ -1,6 +1,6 @@
 [package]
 name = "near-lake"
-version = "2.1.0-rc.1"
+version = "2.2.0"
 authors = ["Near Inc <hello@nearprotocol.com>"]
 edition = "2021"
 
@@ -29,7 +29,7 @@ tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 
 # Please, update the supported nearcore version in .cargo/config.toml file
-near-indexer = { git = "https://github.com/near/nearcore", rev = "4c41f9ee157c492613fae0d4c425b2511ec3d40e" }
-near-indexer-primitives = { git = "https://github.com/near/nearcore", rev = "4c41f9ee157c492613fae0d4c425b2511ec3d40e" }
-near-client = { git = "https://github.com/near/nearcore", rev = "4c41f9ee157c492613fae0d4c425b2511ec3d40e" }
-near-o11y = { git = "https://github.com/near/nearcore", rev = "4c41f9ee157c492613fae0d4c425b2511ec3d40e" }
+near-indexer = { git = "https://github.com/near/nearcore", rev = "7dbfa116bdab065ac417e85281a2e74bab6fc2ef" }
+near-indexer-primitives = { git = "https://github.com/near/nearcore", rev = "7dbfa116bdab065ac417e85281a2e74bab6fc2ef" }
+near-client = { git = "https://github.com/near/nearcore", rev = "7dbfa116bdab065ac417e85281a2e74bab6fc2ef" }
+near-o11y = { git = "https://github.com/near/nearcore", rev = "7dbfa116bdab065ac417e85281a2e74bab6fc2ef" }
