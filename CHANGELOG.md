@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.0-rc.0
+
+* Adopt the changes from the `nearcore` around how the typical configs are downloaded now (see [nearcore#12070](https://github.com/near/nearcore/issues/12070))
+
 ## 2.2.1
 
 * Upgrade Indexer Framework to be based on [nearcore 2.2.1](https://github.com/near/nearcore/releases/tag/2.2.1)
