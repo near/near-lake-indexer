@@ -107,7 +107,11 @@ fn main() {
                 .donwload_genesis_records_url
                 .as_ref()
                 .map(AsRef::as_ref),
-            config.download_config,
+            if config.download_config {
+                Some(near_config_utils::DownloadConfigType::RPC)
+            } else {
+                None
+            },
             config.download_config_url.as_ref().map(AsRef::as_ref),
             config.boot_nodes.as_ref().map(AsRef::as_ref),
             config.max_gas_burnt_view,
