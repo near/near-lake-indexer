@@ -59,18 +59,16 @@ To connect NEAR Lake to the specific chain you need to have necessary configs, y
 $ ./target/release/near-lake --home ~/.near/testnet init --chain-id testnet --download-config --download-genesis
 ```
 
-The above code will download the official genesis config and generate necessary configs. You can replace `testnet` in the command above to different network ID (`betanet`, `mainnet`).
+The above code will download the official genesis config and generate necessary configs. You can replace `testnet` in the command above to different network ID (`mainnet`).
 
 **NB!** According to changes in `nearcore` config generation we don't fill all the necessary fields in the config file.
 While this issue is open https://github.com/nearprotocol/nearcore/issues/3156 you need to download config you want and replace the generated one manually.
-- [testnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json)
-- [betanet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/betanet/config.json)
-- [mainnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json)
+- [testnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/rpc/config.json)
+- [mainnet config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/rpc/config.json)
 
-Configs for the specified network are in the `--home` provided folder. We need to ensure that NEAR Lake follows
-all the necessary shards, so `"tracked_shards"` parameters in `~/.near/testnet/config.json` needs to be configured properly.
-Currently, `nearcore` treats empty value for `"tracked_shards"` as "do not track any shard" and **any value** as "track all shards".
-For example, in order to track all shards, you just add the shard #0 to the list:
+Configs for the specified network are in the `--home` provided folder. The configuration in the `config.json` file ensures that NEAR Lake follows
+all the necessary shards, so `"tracked_shards"` parameters in `~/.near/testnet/config.json` is configured as follows:
+(`nearcore` treats empty value for `"tracked_shards"` as "do not track any shard" and **any value** as "track all shards".)
 
 ```
 ...
