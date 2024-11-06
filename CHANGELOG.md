@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.3.0
+
+* Upgrade Indexer Framework to be based on [nearcore 2.3.0](https://github.com/near/nearcore/releases/tag/2.3.0)
+
+## 2.3.0-rc.4
+
+* Upgrade Indexer Framework to be based on [nearcore 2.3.0-rc.4](https://github.com/near/nearcore/releases/tag/2.3.0-rc.4)
+
+## 2.3.0-rc.3
+
+* Upgrade Indexer Framework to be based on [nearcore 2.3.0-rc.3](https://github.com/near/nearcore/releases/tag/2.3.0-rc.3)
+
+## 2.3.0-rc.2
+
+* Upgrade Indexer Framework to be based on [nearcore 2.3.0-rc.2](https://github.com/near/nearcore/releases/tag/2.3.0-rc.2)
+
+## 2.3.0-rc.1
+
+* Upgrade Indexer Framework to be based on [nearcore 2.3.0-rc.1](https://github.com/near/nearcore/releases/tag/2.3.0-rc.1)
+* Bump the minimal supported Rust version to `1.81.0` (following the `nearcore` master branch)
+* Adopt the changes from the `nearcore` around how the typical configs are downloaded now (see [nearcore#12070](https://github.com/near/nearcore/issues/12070))
+
 ## 2.2.1
 
 * Upgrade Indexer Framework to be based on [nearcore 2.2.1](https://github.com/near/nearcore/releases/tag/2.2.1)
