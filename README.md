@@ -135,27 +135,8 @@ the `data` folder and put it in you `--home-dir` of your choice (by default it i
 Running your NEAR Lake node on top of a backup data will reduce the time of syncing process
 because your node will download only the data after the backup was cut and it takes reasonable amount time.
 
-All the backups can be downloaded from the public S3 bucket which contains latest daily snapshots:
-
-You will need [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) to be installed in order to download the backups.
-
-### Mainnet
-
-```
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/mainnet/rpc/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/rpc/$LATEST ~/.near/data
-```
-
-### Testnet
-
-```
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/testnet/rpc/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/rpc/$LATEST ~/.near/data
-```
-
-
+The latest daily snapshots are made available to the public by FastNear, and can be used to set up a node.
+For detailed instructions, please refer to [this guide](https://docs.fastnear.com/docs/snapshots).
 
 ## Running NEAR Lake as an archival node
 
