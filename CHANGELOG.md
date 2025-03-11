@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.4.1
+
+* Switch to the Indexer Framework 2.4.0 but with the fix for shard id. See [issue#118](https://github.com/near/near-lake-indexer/issues/118)
+
+Once this release is deployed we expect new data to have correct shard ids in the filenames and correct data. The data that was indexed with the wrong shard id will be reindexed as soon as possible.
+
+## 2.4.0
+
+* Upgrade Indexer Framework to be based on [nearcore 2.4.0](https://github.com/near/nearcore/releases/tag/2.4.0)
+
+## 2.4.0-rc.2
+
+* Upgrade Indexer Framework to be based on [nearcore 2.4.0-rc.2](https://github.com/near/nearcore/releases/tag/2.4.0-rc.2)
+
+## 2.4.0-rc.1
+
+* Upgrade Indexer Framework to be based on [nearcore 2.4.0-rc.1](https://github.com/near/nearcore/releases/tag/2.4.0-rc.1)
+* Bump the minimal supported Rust version to `1.82.0` (following the `nearcore` master branch)
+
 ## 2.3.1
 
 * Upgrade Indexer Framework to be based on [nearcore 2.3.1](https://github.com/near/nearcore/releases/tag/2.3.1)

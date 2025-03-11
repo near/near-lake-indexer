@@ -1,4 +1,5 @@
 use clap::Parser;
+use near_indexer_primitives::types::{Finality};
 
 /// NEAR Lake
 /// Watches for stream of blocks from the chain and puts it in S3 bucket
@@ -68,6 +69,7 @@ impl RunArgs {
             } else {
                 near_indexer::AwaitForNodeSyncedEnum::WaitForFullSync
             },
+            finality: Finality::Final,
             validate_genesis: self.validate_genesis,
         }
     }
