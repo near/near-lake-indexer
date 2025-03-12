@@ -27,6 +27,9 @@ tokio-stream = { version = "0.1" }
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 
+# Based on: https://github.com/near/nearcore/issues/12944#issuecomment-2707438357
+tempfile = "=3.14.0"
+
 # Please, update the supported nearcore version in .cargo/config.toml file
 near-indexer = { git = "https://github.com/near/nearcore", rev = "710f763472a65eaab5a654ca40111cbdc3da99f8" }
 near-indexer-primitives = { git = "https://github.com/near/nearcore", rev = "710f763472a65eaab5a654ca40111cbdc3da99f8" }
