@@ -1,3 +1,6 @@
+> [!WARNING]
+> [Aurora](https://aurora.dev/) is the current maintainer of this project and the fork is maintained [in their organization](https://github.com/aurora-is-near/near-lake-indexer).
+
 # near-lake-indexer
 
 NEAR Lake is an indexer built on top of [NEAR Indexer microframework](https://github.com/nearprotocol/nearcore/tree/master/chain/indexer)
